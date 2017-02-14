@@ -11,7 +11,7 @@ window.onload = function() {
   game.state.add('MainMenu', BasicGame.MainMenu);
   game.state.add('Gender', BasicGame.Gender);
   game.state.add('Color', BasicGame.Color);
-  game.state.add('Game', BasicGame.Game);
+  game.state.add('FirstLvl', BasicGame.FirstLvl);
 
   //  Now start the Boot state.
   game.state.start('Boot');

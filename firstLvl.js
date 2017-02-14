@@ -1,6 +1,5 @@
 
-BasicGame.Game = function (game) {
-
+BasicGame.FirstLvl = function (game) {
 };
 
 function violentDeath (player, baddie) {
@@ -15,10 +14,14 @@ function violentDeath (player, baddie) {
 function animateBaddie(player, baddie){
   baddie.body.velocity.x = -300;
 
+  if (localStorage.getItem('color') == 'other' ){
+    baddie.body.velocity.x = -600;
+  }
+
   baddie.animations.play('left');
 }
 
-BasicGame.Game.prototype = {
+BasicGame.FirstLvl.prototype = {
 
   create: function () {
     //  We're going to be using physics, so enable the Arcade Physics system

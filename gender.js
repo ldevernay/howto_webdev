@@ -21,8 +21,8 @@ BasicGame.Gender.prototype = {
 
         if (this.input.activePointer.isDown) {
           var insideLeft = leftHalf.contains(this.game.input.mousePointer.x, this.game.input.mousePointer.y);
-          // this.state.start('Game', true, false, insideLeft);
-          this.game.state.states['Game']._isMale = insideLeft;
+          this.state.start('FirstLvl', true, false, insideLeft);
+          //this.game.state.states['FirstLvl']._isMale = insideLeft;
           this.state.start('Color');
         }
   },
