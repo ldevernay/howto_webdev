@@ -26,7 +26,9 @@ BasicGame.Preloader.prototype = {
     //  Here we load the rest of the assets our game needs.
     this.load.image('titlepage', 'assets/titlepage.png');
     this.game.load.image('sky', 'assets/sky.png');
-		this.game.load.image('ground', 'assets/platform.png');
+    this.game.load.image('ground', 'assets/platform.png');
+    this.load.image('empty', 'assets/empty.png');
+    this.load.image('gender', 'assets/gender.png');
   },
 
   create: function () {
@@ -50,7 +52,7 @@ BasicGame.Preloader.prototype = {
     //if (this.cache.isSoundDecoded('titleMusic') && this.ready == false)
     //{
     //  this.ready = true;
-      this.state.start('MainMenu');
+    this.state.start('MainMenu');
     //}
 
   }
