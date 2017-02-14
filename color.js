@@ -22,6 +22,7 @@ BasicGame.Color.prototype = {
         if (this.input.activePointer.isDown) {
           var insideLeft = leftHalf.contains(this.game.input.mousePointer.x, this.game.input.mousePointer.y);
           // this.state.start('Game', true, false, insideLeft);
+          this.game.state.states['Game']._isWhite = insideLeft;
           this.state.start('Game');
         }
   },
