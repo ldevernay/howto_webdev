@@ -11,6 +11,13 @@ function violentDeath (player, baddie) {
   this.state.start('MainMenu');
 }
 
+function nxtLvl (player, school) {
+
+  //TODO : rediriger vers l'écran de fin, qui redirige lui-même vers le MainMenu
+  this.state.start('MainMenu');
+}
+
+
 function animateBaddie(player, baddie){
   baddie.body.velocity.x = -300;
 
@@ -85,6 +92,15 @@ BasicGame.FirstLvl.prototype = {
 
     //  Our controls.
     cursors = this.game.input.keyboard.createCursorKeys();
+    buildings = this.game.add.group();
+
+    buildings.enableBody = true;
+    // Add school
+    school = buildings.create(700, 336, 'school');
+    school.body.immovable = true;
+
+    this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
+    this.loadingText.anchor.setTo(0.5, 0.5);
 
   },
 
@@ -133,6 +149,12 @@ BasicGame.FirstLvl.prototype = {
 
     // Collide player and baddie
     this.game.physics.arcade.overlap(player, baddie, violentDeath, null, this);
+
+    //  Collide the player and with the platforms
+    //this.game.physics.arcade.collide(player, buildings);
+
+    // Collide player and school
+    this.game.physics.arcade.overlap(player, buildings, nxtLvl, null, this);
 
   }
 
