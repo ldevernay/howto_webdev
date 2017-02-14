@@ -10,6 +10,7 @@ window.onload = function() {
   game.state.add('Preloader', BasicGame.Preloader);
   game.state.add('MainMenu', BasicGame.MainMenu);
   game.state.add('Gender', BasicGame.Gender);
+  game.state.add('Color', BasicGame.Color);
   game.state.add('Game', BasicGame.Game);
 
   //  Now start the Boot state.

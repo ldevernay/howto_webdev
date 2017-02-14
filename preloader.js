@@ -29,6 +29,8 @@ BasicGame.Preloader.prototype = {
     this.game.load.image('ground', 'assets/platform.png');
     this.load.image('empty', 'assets/empty.png');
     this.load.image('gender', 'assets/gender.png');
+    this.load.image('color', 'assets/color.png');
+    this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
   },
 
   create: function () {
