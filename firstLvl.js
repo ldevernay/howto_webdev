@@ -15,7 +15,11 @@ function animateBaddie(player, baddie){
   baddie.body.velocity.x = -300;
 
   if (localStorage.getItem('color') == 'other' ){
-    baddie.body.velocity.x = -600;
+    if (localStorage.getItem('gender') == 'other' ){
+      baddie.body.velocity.x = -600;
+    } else {
+      baddie.body.velocity.x = -450;
+    }
   }
 
   baddie.animations.play('left');
