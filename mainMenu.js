@@ -9,6 +9,10 @@ BasicGame.MainMenu = function (game) {
 BasicGame.MainMenu.prototype = {
 
   create: function () {
+      // RaZ localStorage
+      localStorage.clear();
+    // TODO : disable init testing
+    // localStorage.setItem('done', 'secondLvl');
 
     //  We've already preloaded our assets, so let's kick right into the Main Menu itself.
     //  Here all we're doing is playing some music and adding a picture and button

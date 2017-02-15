@@ -7,8 +7,15 @@ function violentDeath (player, sprite) {
   // Removes the star from the screen
   player.kill();
 
-  //TODO : rediriger vers l'écran de fin, qui redirige lui-même vers le MainMenu
-  this.state.start('MainMenu');
+  if (localStorage.getItem('done') == 'firstLvl'){
+    localStorage.setItem('done', 'secondLvl');
+  } else if (localStorage.getItem('done') == 'secondLvl'){
+    localStorage.setItem('done', 'thirdLvl');
+  } else {
+    localStorage.setItem('done', 'firstLvl');
+  }
+
+  this.state.start('Failure');
 }
 
 function nxtLvl (player, school) {
