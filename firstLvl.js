@@ -144,7 +144,7 @@ BasicGame.FirstLvl.prototype = {
     // Add school
     if (localStorage.getItem('done') == 'firstLvl'){
       school = buildings.create(650, 305, 'university');
-      this.loadingText = this.add.text(this.game.width / 2, this.game.height + 80 / 2, "Réussis tes études", { font: "30px monospace", fill: "#fff" });
+      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Réussis tes études", { font: "30px monospace", fill: "#fff" });
     } else {
       school = buildings.create(700, 338, 'school');
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
@@ -167,11 +167,11 @@ BasicGame.FirstLvl.prototype = {
       bullet.kill();
     }
 
-          // Enable physics on the bullet
-          this.game.physics.arcade.enable(this.bulletPool);
-          this.bulletPool.enableBody = true;
-          this.game.physics.arcade.collide(player, this.bulletPool);
-        this.bulletPool.physicsBodyType = Phaser.Physics.ARCADE;
+    // Enable physics on the bullet
+    this.game.physics.arcade.enable(this.bulletPool);
+    this.bulletPool.enableBody = true;
+    this.game.physics.arcade.collide(player, this.bulletPool);
+    this.bulletPool.physicsBodyType = Phaser.Physics.ARCADE;
 
 
   },
@@ -221,8 +221,8 @@ BasicGame.FirstLvl.prototype = {
     if (localStorage.getItem('done') == 'firstLvl'){
       // Collide player and bullets
       this.shootBullet();
-          // Make it lethal
-          this.game.physics.arcade.overlap(player, bullet, violentDeath, null, this);
+      // Make it lethal
+      this.game.physics.arcade.overlap(player, bullet, violentDeath, null, this);
     }
 
 
