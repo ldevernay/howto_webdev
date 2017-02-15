@@ -64,8 +64,12 @@ BasicGame.FirstLvl.prototype = {
     bullet.checkWorldBounds = true;
     bullet.outOfBoundsKill = true;
 
-    // Set the bullet position to the gun position.
-    bullet.reset(school.x, school.y + 30);
+    // Set the bullet position to the building position.
+    if (localStorage.getItem('done') == 'firstLvl'){
+      bullet.reset(school.x, school.y + 30);
+    } else if (localStorage.getItem('done') == 'secondLvl'){
+      bullet.reset(school.x, school.y + 150);
+    }
 
     // Shoot it
     bullet.body.velocity.x = this.BULLET_SPEED;
@@ -145,7 +149,12 @@ BasicGame.FirstLvl.prototype = {
     if (localStorage.getItem('done') == 'firstLvl'){
       school = buildings.create(650, 305, 'university');
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Réussis tes études", { font: "30px monospace", fill: "#fff" });
-    } else {
+    }
+    else if (localStorage.getItem('done') == 'secondLvl'){
+      school = buildings.create(650, 195, 'factory');
+      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe des entretiens", { font: "30px monospace", fill: "#fff" });
+    }
+    else {
       school = buildings.create(700, 338, 'school');
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
     }
@@ -218,7 +227,7 @@ BasicGame.FirstLvl.prototype = {
 
     animateBaddie(player, baddie);
 
-    if (localStorage.getItem('done') == 'firstLvl'){
+    if (localStorage.getItem('done') == 'firstLvl' || localStorage.getItem('done') == 'secondLvl'){
       // Collide player and bullets
       this.shootBullet();
       // Make it lethal
