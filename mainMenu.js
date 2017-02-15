@@ -19,6 +19,7 @@ BasicGame.MainMenu.prototype = {
     this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Click to start", { font: "20px monospace", fill: "#fff" });
     this.loadingText.anchor.setTo(0.5, 0.5);
     this.add.text(this.game.width / 2, this.game.height - 90, "Copyright (c) LD2017", { font: "12px monospace", fill: "#fff", align: "center"}).anchor.setTo(0.5, 0.5);
+    this.add.text(this.game.width / 2, this.game.height - 75, "Assets Copyright (c) 2017 gallanty.deviantart.com", { font: "12px monospace", fill: "#fff", align: "center"}).anchor.setTo(0.5, 0.5);
 
   },
 

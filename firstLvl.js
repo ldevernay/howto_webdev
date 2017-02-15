@@ -12,9 +12,13 @@ function violentDeath (player, baddie) {
 }
 
 function nxtLvl (player, school) {
+  if (localStorage.getItem('done') == 'firstLvl'){
+    localStorage.setItem('done', 'secondLvl');
+  } else {
+    localStorage.setItem('done', 'firstLvl');
+  }
 
-  //TODO : rediriger vers l'écran de fin, qui redirige lui-même vers le MainMenu
-  this.state.start('MainMenu');
+  this.state.start('Success');
 }
 
 
@@ -96,11 +100,21 @@ BasicGame.FirstLvl.prototype = {
 
     buildings.enableBody = true;
     // Add school
-    school = buildings.create(700, 336, 'school');
+    if (localStorage.getItem('done') == 'firstLvl'){
+      school = buildings.create(650, 305, 'university');
+      this.loadingText = this.add.text(this.game.width / 2, this.game.height + 80 / 2, "Réussis tes études", { font: "30px monospace", fill: "#fff" });
+    } else {
+      school = buildings.create(700, 338, 'school');
+      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
+    }
     school.body.immovable = true;
 
-    this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
     this.loadingText.anchor.setTo(0.5, 0.5);
+
+    // Define constants
+    this.SHOT_DELAY = 100; // milliseconds (10 bullets/second)
+    this.BULLET_SPEED = 500; // pixels/second
+    this.NUMBER_OF_BULLETS = 20;
 
   },
 
