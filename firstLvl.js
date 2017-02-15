@@ -38,7 +38,48 @@ function animateBaddie(player, baddie){
 
 BasicGame.FirstLvl.prototype = {
 
+  shootBullet : function() {
+    // Enforce a short delay between shots by recording
+    // the time that each bullet is shot and testing if
+    // the amount of time since the last shot is more than
+    // the required delay.
+    if (this.lastBulletShotAt === undefined) this.lastBulletShotAt = 0;
+    if (this.game.time.now - this.lastBulletShotAt < this.SHOT_DELAY) return;
+    this.lastBulletShotAt = this.game.time.now;
+
+    // Get a dead bullet from the pool
+    var bullet = this.bulletPool.getFirstDead();
+
+    // If there aren't any bullets available then don't shoot
+    if (bullet === null || bullet === undefined) return;
+
+    // Revive the bullet
+    // This makes the bullet "alive"
+    bullet.revive();
+
+    // Bullets should kill themselves when they leave the world.
+    // Phaser takes care of this for me by setting this flag
+    // but you can do it yourself by killing the bullet if
+    // its x,y coordinates are outside of the world.
+    bullet.checkWorldBounds = true;
+    bullet.outOfBoundsKill = true;
+
+    // Set the bullet position to the gun position.
+    bullet.reset(school.x, school.y + 30);
+
+    // Shoot it
+    bullet.body.velocity.x = this.BULLET_SPEED;
+    bullet.body.velocity.y = 0;
+  },
+
   create: function () {
+
+
+    // Define constants
+    this.SHOT_DELAY = 2000; // milliseconds (10 bullets/second)
+    this.BULLET_SPEED = -150; // pixels/second
+    this.NUMBER_OF_BULLETS = 20;
+
     //  We're going to be using physics, so enable the Arcade Physics system
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
@@ -111,10 +152,23 @@ BasicGame.FirstLvl.prototype = {
 
     this.loadingText.anchor.setTo(0.5, 0.5);
 
-    // Define constants
-    this.SHOT_DELAY = 100; // milliseconds (10 bullets/second)
-    this.BULLET_SPEED = 500; // pixels/second
-    this.NUMBER_OF_BULLETS = 20;
+    // Create an object pool of bullets
+    this.bulletPool = this.game.add.group();
+    for(var i = 0; i < this.NUMBER_OF_BULLETS; i++) {
+      // Create each bullet and add it to the group.
+      var bullet = this.game.add.sprite(0, 0, 'bullet');
+      this.bulletPool.add(bullet);
+
+      // Set its pivot point to the center of the bullet
+      bullet.anchor.setTo(0.5, 0.5);
+
+      // Enable physics on the bullet
+      this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
+
+      // Set its initial state to "dead".
+      bullet.kill();
+    }
+
 
   },
 
@@ -159,6 +213,10 @@ BasicGame.FirstLvl.prototype = {
     var baddieHitPlatform = this.game.physics.arcade.collide(baddie, platforms);
 
     animateBaddie(player, baddie);
+
+    if (localStorage.getItem('done') == 'firstLvl'){
+      this.shootBullet();
+    }
 
 
     // Collide player and baddie

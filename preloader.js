@@ -33,6 +33,7 @@ BasicGame.Preloader.prototype = {
     this.load.image('school', 'assets/school.png');
     this.load.image('university', 'assets/university.png');
     this.load.image('firstLvlDone', 'assets/firstLvlDone.png');
+    this.load.image('bullet', '/assets/bullet.png');
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 		this.load.spritesheet('baddie', 'assets/baddie.png', 32, 32);
   },
