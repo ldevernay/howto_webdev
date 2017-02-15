@@ -197,6 +197,9 @@ BasicGame.Bonus.prototype = {
 
     //  We need to enable physics on the player
     this.game.physics.arcade.enable(baddieBonus);
+    baddieBonus.enableBody = true;
+    this.game.physics.arcade.collide(player, baddieBonus);
+    baddieBonus.physicsBodyType = Phaser.Physics.ARCADE;
 
     //  Player physics properties. Give the little guy a slight bounce.
     baddieBonus.body.bounce.y = 0.2;
