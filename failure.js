@@ -16,20 +16,23 @@ BasicGame.Failure.prototype = {
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 100, "Clique pour recommencer.", { font: "20px monospace", fill: "#fff" });
     } else if (localStorage.getItem('done') == 'secondLvl'){
       this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2, "Désolé!", { font: "30px monospace", fill: "#fff" });
-        this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2 + 40, "Tu n'as pas eu ton diplôme.", { font: "30px monospace", fill: "#fff" });
+      this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2 + 40, "Tu n'as pas eu ton diplôme.", { font: "30px monospace", fill: "#fff" });
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 100, "Clique pour recommencer.", { font: "20px monospace", fill: "#fff" });
     } else if (localStorage.getItem('done') == 'thirdLvl'){
-        this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2, "Désolé!", { font: "30px monospace", fill: "#fff" });
-          this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2 + 40, "Ton profil ne convient pas.", { font: "30px monospace", fill: "#fff" });
-        this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 100, "Clique pour recommencer.", { font: "20px monospace", fill: "#fff" });
+      this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2, "Désolé!", { font: "30px monospace", fill: "#fff" });
+      this.loadingText = this.add.text(this.game.width / 4, this.game.height / 2 + 40, "Ton profil ne convient pas.", { font: "30px monospace", fill: "#fff" });
+      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 100, "Clique pour recommencer.", { font: "20px monospace", fill: "#fff" });
     }
     this.loadingText.anchor.setTo(0.5, 0.5);
+    button = this.game.add.button(this.game.width - 50, 10, 'question', function() {
+      window.open("http://www.inegalites.fr/", "_blank");
+    }, this);
   },
 
   update: function () {
 
     if (this.input.activePointer.isDown) {
-        this.state.start('MainMenu');
+      this.state.start('MainMenu');
     }
   },
 

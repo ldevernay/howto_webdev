@@ -6,6 +6,9 @@ function violentDeath (player, sprite) {
 
   // Removes the star from the screen
   player.kill();
+  var explosion = explosions.getFirstExists(false);
+  explosion.reset(player.body.x, player.body.y);
+  explosion.play('kaboom', 30, false, true);
 
   if (localStorage.getItem('done') == 'firstLvl'){
     localStorage.setItem('done', 'secondLvl');
@@ -265,6 +268,12 @@ BasicGame.FirstLvl.prototype = {
     this.game.physics.arcade.collide(player, this.baddiePool);
     this.baddiePool.physicsBodyType = Phaser.Physics.ARCADE;
 
+    //  An explosion pool
+    explosions = this.game.add.group();
+    explosions.createMultiple(30, 'kaboom');
+    player.anchor.x = 0.5;
+    player.anchor.y = 0.5;
+    player.animations.add('kaboom');
 
   },
 

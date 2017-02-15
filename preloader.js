@@ -35,8 +35,11 @@ BasicGame.Preloader.prototype = {
     this.load.image('factory', 'assets/factory.png');
     this.load.image('firstLvlDone', 'assets/firstLvlDone.png');
     this.load.image('bullet', '/assets/bullet.png');
+    this.load.image('question', '/assets/question.png');
+    this.load.image('simplon', '/assets/simplon.png');
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 		this.load.spritesheet('baddie', 'assets/baddie.png', 32, 32);
+    this.load.spritesheet('kaboom', 'assets/explode.png', 128, 128);
   },
 
   create: function () {
