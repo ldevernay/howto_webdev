@@ -14,6 +14,8 @@ function violentDeath (player, sprite) {
 function nxtLvl (player, school) {
   if (localStorage.getItem('done') == 'firstLvl'){
     localStorage.setItem('done', 'secondLvl');
+  } else if (localStorage.getItem('done') == 'secondLvl'){
+    localStorage.setItem('done', 'thirdLvl');
   } else {
     localStorage.setItem('done', 'firstLvl');
   }
@@ -83,7 +85,7 @@ BasicGame.FirstLvl.prototype = {
     // the amount of time since the last shot is more than
     // the required delay.
     if (this.lastBaddieShotAt === undefined) this.lastBaddieShotAt = 0;
-    if (this.game.time.now - this.lastBaddieShotAt < this.SHOT_DELAY) return;
+    if (this.game.time.now - this.lastBaddieShotAt < this.BADDIE_SHOT_DELAY) return;
     this.lastBaddieShotAt = this.game.time.now;
 
     // Get a dead bullet from the pool
@@ -127,6 +129,7 @@ BasicGame.FirstLvl.prototype = {
     this.BULLET_SPEED = -150; // pixels/second
     this.NUMBER_OF_BULLETS = 20;
     this.NUMBER_OF_BADDIES = 20;
+    this.BADDIE_SHOT_DELAY = 3000;
 
     //  We're going to be using physics, so enable the Arcade Physics system
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -300,7 +303,7 @@ BasicGame.FirstLvl.prototype = {
 
     animateBaddie(player, baddie);
 
-    if (localStorage.getItem('done') == 'firstLvl' || localStorage.getItem('done') == 'secondLvl'){
+    if (localStorage.getItem('done') == 'firstLvl' || (localStorage.getItem('done') == 'secondLvl' && localStorage.getItem('color') == 'white' && localStorage.getItem('gender') == 'male')){
       // Collide player and bullets
       this.shootBullet();
       // Make it lethal
