@@ -77,6 +77,48 @@ BasicGame.FirstLvl.prototype = {
 
   },
 
+  shootBaddies : function() {
+    // Enforce a short delay between shots by recording
+    // the time that each bullet is shot and testing if
+    // the amount of time since the last shot is more than
+    // the required delay.
+    if (this.lastBaddieShotAt === undefined) this.lastBaddieShotAt = 0;
+    if (this.game.time.now - this.lastBaddieShotAt < this.SHOT_DELAY) return;
+    this.lastBaddieShotAt = this.game.time.now;
+
+    // Get a dead bullet from the pool
+    baddieFactory = this.baddiePool.getFirstDead();
+
+    // If there aren't any bullets available then don't shoot
+    if (baddieFactory === null || baddieFactory === undefined) return;
+
+    // Revive the bullet
+    // This makes the bullet "alive"
+    baddieFactory.revive();
+
+    // Bullets should kill themselves when they leave the world.
+    // Phaser takes care of this for me by setting this flag
+    // but you can do it yourself by killing the bullet if
+    // its x,y coordinates are outside of the world.
+    baddieFactory.checkWorldBounds = true;
+    baddieFactory.outOfBoundsKill = true;
+
+    // Set the bullet position to the building position.
+    if (localStorage.getItem('done') == 'secondLvl'){
+      baddieFactory.reset(school.x, school.y + 150);
+    }
+
+    // Shoot it
+    // baddieFactory.body.velocity.x = this.BULLET_SPEED;
+    // baddieFactory.body.velocity.y = 0;
+
+
+    this.game.physics.arcade.collide(baddieFactory, platforms);
+
+    animateBaddie(player, baddieFactory);
+
+  },
+
   create: function () {
 
 
@@ -84,6 +126,7 @@ BasicGame.FirstLvl.prototype = {
     this.SHOT_DELAY = 2000; // milliseconds (10 bullets/second)
     this.BULLET_SPEED = -150; // pixels/second
     this.NUMBER_OF_BULLETS = 20;
+    this.NUMBER_OF_BADDIES = 20;
 
     //  We're going to be using physics, so enable the Arcade Physics system
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -182,6 +225,36 @@ BasicGame.FirstLvl.prototype = {
     this.game.physics.arcade.collide(player, this.bulletPool);
     this.bulletPool.physicsBodyType = Phaser.Physics.ARCADE;
 
+    // Create an object pool of baddies
+    this.baddiePool = this.game.add.group();
+    for(var j = 0; j < this.NUMBER_OF_BADDIES; j++) {
+      // Create each baddie and add it to the group.
+      baddieFactory = this.game.add.sprite(0, 0, 'baddie');
+      this.baddiePool.add(baddieFactory);
+
+      // Set its pivot point to the center of the baddie
+      baddieFactory.anchor.setTo(0.5, 0.5);
+      //  We need to enable physics on the player
+      this.game.physics.arcade.enable(baddieFactory);
+
+      //  Player physics properties. Give the little guy a slight bounce.
+      baddieFactory.body.bounce.y = 0.2;
+      baddieFactory.body.gravity.y = 300;
+      baddieFactory.body.collideWorldBounds = true;
+
+      //  Our two animations, walking left and right.
+      baddieFactory.animations.add('left', [0, 1], 10, true);
+      baddieFactory.animations.add('right', [2, 3], 10, true);
+
+      // Set its initial state to "dead".
+      baddieFactory.kill();
+    }
+    // Enable physics on the bullet
+    this.game.physics.arcade.enable(this.baddiePool);
+    this.baddiePool.enableBody = true;
+    this.game.physics.arcade.collide(player, this.baddiePool);
+    this.baddiePool.physicsBodyType = Phaser.Physics.ARCADE;
+
 
   },
 
@@ -197,14 +270,14 @@ BasicGame.FirstLvl.prototype = {
     if (cursors.left.isDown)
     {
       //  Move to the left
-      player.body.velocity.x = -150;
+      player.body.velocity.x = -250;
 
       player.animations.play('left');
     }
     else if (cursors.right.isDown)
     {
       //  Move to the right
-      player.body.velocity.x = 150;
+      player.body.velocity.x = 250;
 
       player.animations.play('right');
     }
@@ -232,6 +305,15 @@ BasicGame.FirstLvl.prototype = {
       this.shootBullet();
       // Make it lethal
       this.game.physics.arcade.overlap(player, bullet, violentDeath, null, this);
+    }
+
+    if (localStorage.getItem('done') == 'secondLvl' && (localStorage.getItem('color') == 'other' || localStorage.getItem('gender') == 'other' )){
+      // Collide player and bullets
+      this.shootBaddies();
+      // Make it lethal
+
+      var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactory, platforms);
+      this.game.physics.arcade.overlap(player, baddieFactory, violentDeath, null, this);
     }
 
 

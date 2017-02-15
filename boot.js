@@ -32,7 +32,7 @@ BasicGame.Boot.prototype = {
 
   preload: function () {
 // TODO : disable init testing
-// localStorage.setItem('done', 'secondLvl');
+localStorage.setItem('done', 'secondLvl');
     //  Here we load the assets required for our preloader (in this case a loading bar)
     this.load.image('preloaderBar', 'assets/preloader-bar.png');
 
