@@ -21,10 +21,10 @@ function nxtLvlBonus (player, school) {
 }
 
 
-function animateBaddieBonus(player, baddie){
-  baddie.body.velocity.x = -300;
-  baddie.body.velocity.x = -600;
-  baddie.animations.play('left');
+function animateBaddieBonus(player, baddieBonus){
+  baddieBonus.body.velocity.x = -300;
+  baddieBonus.body.velocity.x = -600;
+  baddieBonus.animations.play('left');
 }
 
 BasicGame.Bonus.prototype = {
@@ -78,33 +78,33 @@ BasicGame.Bonus.prototype = {
     this.lastBaddieShotAt = this.game.time.now;
 
     // Get a dead bullet from the pool
-    baddieFactory = this.baddiePool.getFirstDead();
+    baddieFactoryBonus = this.baddiePoolBonus.getFirstDead();
 
     // If there aren't any bullets available then don't shoot
-    if (baddieFactory === null || baddieFactory === undefined) return;
+    if (baddieFactoryBonus === null || baddieFactoryBonus === undefined) return;
 
     // Revive the bullet
     // This makes the bullet "alive"
-    baddieFactory.revive();
+    baddieFactoryBonus.revive();
 
     // Bullets should kill themselves when they leave the world.
     // Phaser takes care of this for me by setting this flag
     // but you can do it yourself by killing the bullet if
     // its x,y coordinates are outside of the world.
-    baddieFactory.checkWorldBounds = true;
-    baddieFactory.outOfBoundsKill = true;
+    baddieFactoryBonus.checkWorldBounds = true;
+    baddieFactoryBonus.outOfBoundsKill = true;
 
     // Set the bullet position to the building position.
-      baddieFactory.reset(factory.x, factory.y + 150);
+    baddieFactoryBonus.reset(factory.x, factory.y + 150);
 
     // Shoot it
     // baddieFactory.body.velocity.x = this.BULLET_SPEED;
     // baddieFactory.body.velocity.y = 0;
 
 
-    this.game.physics.arcade.collide(baddieFactory, platforms);
+    this.game.physics.arcade.collide(baddieFactoryBonus, platforms);
 
-    animateBaddieBonus(player, baddieFactory);
+    animateBaddieBonus(player, baddieFactoryBonus);
 
   },
 
@@ -155,19 +155,19 @@ BasicGame.Bonus.prototype = {
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
     // Create baddie
-    baddie = this.game.add.sprite(750, this.game.world.height - 150, 'baddie');
+    baddieBonus = this.game.add.sprite(750, this.game.world.height - 150, 'baddie');
 
     //  We need to enable physics on the player
-    this.game.physics.arcade.enable(baddie);
+    this.game.physics.arcade.enable(baddieBonus);
 
     //  Player physics properties. Give the little guy a slight bounce.
-    baddie.body.bounce.y = 0.2;
-    baddie.body.gravity.y = 300;
+    baddieBonus.body.bounce.y = 0.2;
+    baddieBonus.body.gravity.y = 300;
     //baddie.body.collideWorldBounds = true;
 
     //  Our two animations, walking left and right.
-    baddie.animations.add('left', [0, 1], 10, true);
-    baddie.animations.add('right', [2, 3], 10, true);
+    baddieBonus.animations.add('left', [0, 1], 10, true);
+    baddieBonus.animations.add('right', [2, 3], 10, true);
 
     //  Our controls.
     cursors = this.game.input.keyboard.createCursorKeys();
@@ -204,34 +204,34 @@ BasicGame.Bonus.prototype = {
     this.bulletPool.physicsBodyType = Phaser.Physics.ARCADE;
 
     // Create an object pool of baddies
-    this.baddiePool = this.game.add.group();
+    this.baddiePoolBonus = this.game.add.group();
     for(var j = 0; j < this.NUMBER_OF_BADDIES; j++) {
       // Create each baddie and add it to the group.
-      baddieFactory = this.game.add.sprite(0, 0, 'baddie');
-      this.baddiePool.add(baddieFactory);
+      baddieFactoryBonus = this.game.add.sprite(0, 0, 'baddie');
+      this.baddiePoolBonus.add(baddieFactoryBonus);
 
       // Set its pivot point to the center of the baddie
-      baddieFactory.anchor.setTo(0.5, 0.5);
+      baddieFactoryBonus.anchor.setTo(0.5, 0.5);
       //  We need to enable physics on the player
-      this.game.physics.arcade.enable(baddieFactory);
+      this.game.physics.arcade.enable(baddieFactoryBonus);
 
       //  Player physics properties. Give the little guy a slight bounce.
-      baddieFactory.body.bounce.y = 0.2;
-      baddieFactory.body.gravity.y = 300;
+      baddieFactoryBonus.body.bounce.y = 0.2;
+      baddieFactoryBonus.body.gravity.y = 300;
       //baddieFactory.body.collideWorldBounds = true;
 
       //  Our two animations, walking left and right.
-      baddieFactory.animations.add('left', [0, 1], 10, true);
-      baddieFactory.animations.add('right', [2, 3], 10, true);
+      baddieFactoryBonus.animations.add('left', [0, 1], 10, true);
+      baddieFactoryBonus.animations.add('right', [2, 3], 10, true);
 
       // Set its initial state to "dead".
-      baddieFactory.kill();
+      baddieFactoryBonus.kill();
     }
     // Enable physics on the bullet
-    this.game.physics.arcade.enable(this.baddiePool);
-    this.baddiePool.enableBody = true;
-    this.game.physics.arcade.collide(player, this.baddiePool);
-    this.baddiePool.physicsBodyType = Phaser.Physics.ARCADE;
+    this.game.physics.arcade.enable(this.baddiePoolBonus);
+    this.baddiePoolBonus.enableBody = true;
+    this.game.physics.arcade.collide(player, this.baddiePoolBonus);
+    this.baddiePoolBonus.physicsBodyType = Phaser.Physics.ARCADE;
 
     //  An explosion pool
     explosions = this.game.add.group();
@@ -280,9 +280,9 @@ BasicGame.Bonus.prototype = {
     }
 
     // Collide baddie and platforms
-    var baddieHitPlatform = this.game.physics.arcade.collide(baddie, platforms);
+    var baddieHitPlatform = this.game.physics.arcade.collide(baddieBonus, platforms);
 
-    animateBaddieBonus(player, baddie);
+    animateBaddieBonus(player, baddieBonus);
 
     // Collide player and bullets
     this.shootBulletBonus();
@@ -292,12 +292,15 @@ BasicGame.Bonus.prototype = {
     this.shootBaddiesBonus();
     // Make it lethal
 
-    var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactory, platforms);
-    this.game.physics.arcade.overlap(player, baddieFactory, violentDeathBonus, null, this);
+    var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactoryBonus, platforms);
+    this.game.physics.arcade.overlap(player, baddieFactoryBonus, violentDeathBonus, null, this);
 
+    // Collide player and buildings
+    this.game.physics.arcade.overlap(player, school, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, university, violentDeathBonus, null, this);
 
     // Collide player and baddie
-    this.game.physics.arcade.overlap(player, baddie, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, baddieBonus, violentDeathBonus, null, this);
 
     //  Collide the player and with the platforms
     //this.game.physics.arcade.collide(player, buildings);
