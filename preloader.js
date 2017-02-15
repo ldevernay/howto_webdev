@@ -26,7 +26,7 @@ BasicGame.Preloader.prototype = {
     //  Here we load the rest of the assets our game needs.
     this.load.image('titlepage', 'assets/titlepage.png');
     this.load.image('sky', 'assets/sky.png');
-    this.load.image('unicorn', '/assets/unicorn.jpg');
+    this.load.image('unicorn', '/assets/rainbow.jpg');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('empty', 'assets/empty.png');
     this.load.image('gender', 'assets/gender.png');
