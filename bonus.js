@@ -1,56 +1,35 @@
 
-BasicGame.FirstLvl = function (game) {
+BasicGame.Bonus = function (game) {
 };
 
-function violentDeath (player, sprite) {
+function violentDeathBonus (player, sprite) {
 
   // Removes the star from the screen
-  player.kill();
+  sprite.animations.add('kaboom');
   var explosion = explosions.getFirstExists(false);
-  explosion.reset(player.body.x, player.body.y);
+  explosion.reset(sprite.body.x, sprite.body.y);
   explosion.play('kaboom', 30, false, true);
-
-  if (localStorage.getItem('done') == 'firstLvl'){
-    localStorage.setItem('done', 'secondLvl');
-  } else if (localStorage.getItem('done') == 'secondLvl'){
-    localStorage.setItem('done', 'thirdLvl');
-  } else {
-    localStorage.setItem('done', 'firstLvl');
-  }
-
-  this.state.start('Failure');
+  sprite.kill();
+  explosion.kill();
 }
 
-function nxtLvl (player, school) {
-  if (localStorage.getItem('done') == 'firstLvl'){
-    localStorage.setItem('done', 'secondLvl');
-  } else if (localStorage.getItem('done') == 'secondLvl'){
-    localStorage.setItem('done', 'thirdLvl');
-  } else {
-    localStorage.setItem('done', 'firstLvl');
-  }
-
+function nxtLvlBonus (player, school) {
+  localStorage.setItem('done', 'thirdLvl');
+  localStorage.setItem('gender', 'male');
+  localStorage.setItem('color', 'white');
   this.state.start('Success');
 }
 
 
-function animateBaddie(player, baddie){
+function animateBaddieBonus(player, baddie){
   baddie.body.velocity.x = -300;
-
-  if (localStorage.getItem('color') == 'other' ){
-    if (localStorage.getItem('gender') == 'other' ){
-      baddie.body.velocity.x = -600;
-    } else {
-      baddie.body.velocity.x = -450;
-    }
-  }
-
+  baddie.body.velocity.x = -600;
   baddie.animations.play('left');
 }
 
-BasicGame.FirstLvl.prototype = {
+BasicGame.Bonus.prototype = {
 
-  shootBullet : function() {
+  shootBulletBonus : function() {
     // Enforce a short delay between shots by recording
     // the time that each bullet is shot and testing if
     // the amount of time since the last shot is more than
@@ -89,7 +68,7 @@ BasicGame.FirstLvl.prototype = {
 
   },
 
-  shootBaddies : function() {
+  shootBaddiesBonus : function() {
     // Enforce a short delay between shots by recording
     // the time that each bullet is shot and testing if
     // the amount of time since the last shot is more than
@@ -116,9 +95,7 @@ BasicGame.FirstLvl.prototype = {
     baddieFactory.outOfBoundsKill = true;
 
     // Set the bullet position to the building position.
-    if (localStorage.getItem('done') == 'secondLvl'){
-      baddieFactory.reset(school.x, school.y + 150);
-    }
+      baddieFactory.reset(factory.x, factory.y + 150);
 
     // Shoot it
     // baddieFactory.body.velocity.x = this.BULLET_SPEED;
@@ -127,7 +104,7 @@ BasicGame.FirstLvl.prototype = {
 
     this.game.physics.arcade.collide(baddieFactory, platforms);
 
-    animateBaddie(player, baddieFactory);
+    animateBaddieBonus(player, baddieFactory);
 
   },
 
@@ -135,11 +112,11 @@ BasicGame.FirstLvl.prototype = {
 
 
     // Define constants
-    this.SHOT_DELAY = 2000; // milliseconds (10 bullets/second)
+    this.SHOT_DELAY = 1000; // milliseconds (10 bullets/second)
     this.BULLET_SPEED = -150; // pixels/second
-    this.NUMBER_OF_BULLETS = 20;
-    this.NUMBER_OF_BADDIES = 20;
-    this.BADDIE_SHOT_DELAY = 3000;
+    this.NUMBER_OF_BULLETS = 200;
+    this.NUMBER_OF_BADDIES = 200;
+    this.BADDIE_SHOT_DELAY = 1000;
 
     //  We're going to be using physics, so enable the Arcade Physics system
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
@@ -161,10 +138,6 @@ BasicGame.FirstLvl.prototype = {
 
     //  This stops it from falling away when you jump on it
     ground.body.immovable = true;
-
-    //  Now let's create two ledges
-    var ledge = platforms.create(400, 400, 'ground');
-    ledge.body.immovable = true;
 
     // The player and its settings
     player = this.game.add.sprite(32, this.game.world.height - 150, 'dude');
@@ -201,22 +174,14 @@ BasicGame.FirstLvl.prototype = {
     buildings = this.game.add.group();
 
     buildings.enableBody = true;
-    // Add school
-    if (localStorage.getItem('done') == 'firstLvl'){
-      school = buildings.create(650, 305, 'university');
-      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Réussis tes études", { font: "30px monospace", fill: "#fff" });
-    }
-    else if (localStorage.getItem('done') == 'secondLvl'){
-      school = buildings.create(650, 195, 'factory');
-      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe des entretiens", { font: "30px monospace", fill: "#fff" });
-    }
-    else {
-      school = buildings.create(700, 338, 'school');
-      this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 80, "Passe ton bac", { font: "30px monospace", fill: "#fff" });
-    }
-    school.body.immovable = true;
+    // Add buildings
+    school = buildings.create(this.game.world.width / 4, 475, 'school');
+    university = buildings.create(this.game.world.width / 2, 440, 'university');
+    factory = buildings.create(this.game.world.width - 100, 330, 'factory');
 
-    this.loadingText.anchor.setTo(0.5, 0.5);
+    school.body.immovable = true;
+    university.body.immovable = true;
+    factory.body.immovable = true;
 
     // Create an object pool of bullets
     this.bulletPool = this.game.add.group();
@@ -317,33 +282,28 @@ BasicGame.FirstLvl.prototype = {
     // Collide baddie and platforms
     var baddieHitPlatform = this.game.physics.arcade.collide(baddie, platforms);
 
-    animateBaddie(player, baddie);
+    animateBaddieBonus(player, baddie);
 
-    if (localStorage.getItem('done') == 'firstLvl' || (localStorage.getItem('done') == 'secondLvl' && localStorage.getItem('color') == 'white' && localStorage.getItem('gender') == 'male')){
-      // Collide player and bullets
-      this.shootBullet();
-      // Make it lethal
-      this.game.physics.arcade.overlap(player, bullet, violentDeath, null, this);
-    }
+    // Collide player and bullets
+    this.shootBulletBonus();
+    // Make it lethal
+    this.game.physics.arcade.overlap(player, bullet, violentDeathBonus, null, this);
+    // Collide player and bullets
+    this.shootBaddiesBonus();
+    // Make it lethal
 
-    if (localStorage.getItem('done') == 'secondLvl' && (localStorage.getItem('color') == 'other' || localStorage.getItem('gender') == 'other' )){
-      // Collide player and bullets
-      this.shootBaddies();
-      // Make it lethal
-
-      var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactory, platforms);
-      this.game.physics.arcade.overlap(player, baddieFactory, violentDeath, null, this);
-    }
+    var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactory, platforms);
+    this.game.physics.arcade.overlap(player, baddieFactory, violentDeathBonus, null, this);
 
 
     // Collide player and baddie
-    this.game.physics.arcade.overlap(player, baddie, violentDeath, null, this);
+    this.game.physics.arcade.overlap(player, baddie, violentDeathBonus, null, this);
 
     //  Collide the player and with the platforms
     //this.game.physics.arcade.collide(player, buildings);
 
     // Collide player and school
-    this.game.physics.arcade.overlap(player, buildings, nxtLvl, null, this);
+    this.game.physics.arcade.overlap(player, factory, nxtLvlBonus, null, this);
 
   }
 

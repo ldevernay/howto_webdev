@@ -14,6 +14,7 @@ window.onload = function() {
   game.state.add('FirstLvl', BasicGame.FirstLvl);
   game.state.add('Success', BasicGame.Success);
   game.state.add('Failure', BasicGame.Failure);
+  game.state.add('Bonus', BasicGame.Bonus);
 
   //  Now start the Boot state.
   game.state.start('Boot');

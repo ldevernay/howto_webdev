@@ -24,8 +24,13 @@ BasicGame.Failure.prototype = {
       this.loadingText = this.add.text(this.game.width / 2, this.game.height / 2 + 100, "Clique pour recommencer.", { font: "20px monospace", fill: "#fff" });
     }
     this.loadingText.anchor.setTo(0.5, 0.5);
-    button = this.game.add.button(this.game.width - 50, 10, 'question', function() {
+
+    infoButton = this.game.add.button(this.game.width - 50, 10, 'question', function() {
       window.open("http://www.inegalites.fr/", "_blank");
+    }, this);
+
+    bonusButton = this.game.add.button(this.game.width - 70, this.game.height - 70, 'simplon', function() {
+      this.state.start('Bonus');
     }, this);
   },
 
