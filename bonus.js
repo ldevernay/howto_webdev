@@ -2,16 +2,6 @@
 BasicGame.Bonus = function (game) {
 };
 
-function violentDeathBonus (player, sprite) {
-
-  // Removes the star from the screen
-  sprite.animations.add('kaboom');
-  var explosion = explosions.getFirstExists(false);
-  explosion.reset(sprite.body.x, sprite.body.y);
-  explosion.play('kaboom', 30, false, true);
-  sprite.kill();
-  explosion.kill();
-}
 
 function nxtLvlBonus (player, school) {
   localStorage.setItem('done', 'thirdLvl');
@@ -28,6 +18,58 @@ function animateBaddieBonus(player, baddieBonus){
 }
 
 BasicGame.Bonus.prototype = {
+
+  violentDeathBonus : function(player, sprite) {
+
+    // Removes the star from the screen
+    // sprite.animations.add('kaboom');
+    // var explosion = explosions.getFirstExists(false);
+    // explosion.reset(sprite.body.x, sprite.body.y);
+    // explosion.play('kaboom', 30, false, true);
+    this.getExplosionBonus(sprite.x, sprite.y);
+    sprite.kill();
+    // explosion.kill();
+
+  },
+
+//testing
+  getExplosionBonus : function(x, y) {
+    // Get the first dead explosion from the explosionGroup
+    var explosion = this.explosionGroup.getFirstDead();
+
+    // If there aren't any available, create a new one
+    if (explosion === null) {
+        explosion = this.game.add.sprite(0, 0, 'kaboom');
+        explosion.anchor.setTo(0.5, 0.5);
+
+        // Add an animation for the explosion that kills the sprite when the
+        // animation is complete
+        var animation = explosion.animations.add('kaboom', [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15], 60, false);
+        animation.killOnComplete = true;
+
+        // Add the explosion sprite to the group
+        this.explosionGroup.add(explosion);
+    }
+
+    // Revive the explosion (set it's alive property to true)
+    // You can also define a onRevived event handler in your explosion objects
+    // to do stuff when they are revived.
+    explosion.revive();
+
+    // Move the explosion to the given coordinates
+    explosion.x = x;
+    explosion.y = y;
+
+    // Set rotation of the explosion at random for a little variety
+    explosion.angle = this.game.rnd.integerInRange(0, 360);
+
+    // Play the animation
+    explosion.animations.play('kaboom');
+
+    // Return the explosion itself in case we want to do anything else with it
+    return explosion;
+},
+//end testing
 
   shootBulletBonus : function() {
     // Enforce a short delay between shots by recording
@@ -55,12 +97,8 @@ BasicGame.Bonus.prototype = {
     bullet.checkWorldBounds = true;
     bullet.outOfBoundsKill = true;
 
-    // Set the bullet position to the building position.
-    if (localStorage.getItem('done') == 'firstLvl'){
-      bullet.reset(school.x, school.y + 30);
-    } else if (localStorage.getItem('done') == 'secondLvl'){
-      bullet.reset(school.x, school.y + 150);
-    }
+    // Set the bullet position to the building position
+      bullet.reset(factory.x, factory.y + 150);
 
     // Shoot it
     bullet.body.velocity.x = this.BULLET_SPEED;
@@ -171,17 +209,31 @@ BasicGame.Bonus.prototype = {
 
     //  Our controls.
     cursors = this.game.input.keyboard.createCursorKeys();
-    buildings = this.game.add.group();
 
-    buildings.enableBody = true;
     // Add buildings
-    school = buildings.create(this.game.world.width / 4, 475, 'school');
-    university = buildings.create(this.game.world.width / 2, 440, 'university');
-    factory = buildings.create(this.game.world.width - 100, 330, 'factory');
+    school = this.game.add.sprite(this.game.world.width / 4, 475, 'school');
+    university = this.game.add.sprite(this.game.world.width / 2, 440, 'university');
+    factory = this.game.add.sprite(this.game.world.width - 100, 330, 'factory');
 
-    school.body.immovable = true;
-    university.body.immovable = true;
-    factory.body.immovable = true;
+
+    this.buildings = this.game.add.group();
+    this.buildings.add(school);
+    this.buildings.add(university);
+    this.buildings.add(factory);
+
+    // Set its pivot point to the center of the baddie
+    // baddieFactoryBonus.anchor.setTo(0.5, 0.5);
+
+    this.game.physics.arcade.enable(school);
+    this.game.physics.arcade.enable(university);
+    this.game.physics.arcade.enable(factory);
+
+    this.game.physics.arcade.enable(this.buildings);
+    this.buildings.enableBody = true;
+    this.game.physics.arcade.collide(player, this.buildings);
+    this.buildings.physicsBodyType = Phaser.Physics.ARCADE;
+
+    // this.buildings.body.immovable = true;
 
     // Create an object pool of bullets
     this.bulletPool = this.game.add.group();
@@ -287,26 +339,40 @@ BasicGame.Bonus.prototype = {
     // Collide player and bullets
     this.shootBulletBonus();
     // Make it lethal
-    this.game.physics.arcade.overlap(player, bullet, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, bullet, this.violentDeathBonus, null, this);
     // Collide player and bullets
     this.shootBaddiesBonus();
     // Make it lethal
 
+    // Create a group for explosions
+    this.explosionGroup = this.game.add.group();
+
     var baddieFactoryHitPlatform = this.game.physics.arcade.collide(baddieFactoryBonus, platforms);
-    this.game.physics.arcade.overlap(player, baddieFactoryBonus, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, baddieFactoryBonus, this.violentDeathBonus, null, this);
 
     // Collide player and buildings
-    this.game.physics.arcade.overlap(player, school, violentDeathBonus, null, this);
-    this.game.physics.arcade.overlap(player, university, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, school, this.violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, university, this.violentDeathBonus, null, this);
 
     // Collide player and baddie
-    this.game.physics.arcade.overlap(player, baddieBonus, violentDeathBonus, null, this);
+    this.game.physics.arcade.overlap(player, baddieBonus, this.violentDeathBonus, null, this);
 
     //  Collide the player and with the platforms
     //this.game.physics.arcade.collide(player, buildings);
 
     // Collide player and school
     this.game.physics.arcade.overlap(player, factory, nxtLvlBonus, null, this);
+
+
+      // testing
+      // this.game.physics.arcade.collide(this.baddiePoolBonus, player, function(baddieFactoryBonus, player) {
+      //         // Create an explosion
+      //         this.getExplosionBonus(baddieFactoryBonus.x, baddieFactoryBonus.y);
+      //
+      //         // Kill the bullet
+      //         //baddieFactoryBonus.kill();
+      //     }, null, this);
+      // fin testing
 
   }
 
