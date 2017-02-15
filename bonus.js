@@ -160,7 +160,7 @@ BasicGame.Bonus.prototype = {
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
     //  A simple background for our game
-    this.game.add.sprite(0, 0, 'sky');
+    this.game.add.sprite(0, 0, 'unicorn');
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.game.add.group();
