@@ -98,7 +98,7 @@ BasicGame.Bonus.prototype = {
     bullet.outOfBoundsKill = true;
 
     // Set the bullet position to the building position
-      bullet.reset(factory.x, factory.y + 150);
+      bullet.reset(factory.x, factory.y + 175);
 
     // Shoot it
     bullet.body.velocity.x = this.BULLET_SPEED;
