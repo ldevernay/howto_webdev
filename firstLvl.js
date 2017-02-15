@@ -2,7 +2,7 @@
 BasicGame.FirstLvl = function (game) {
 };
 
-function violentDeath (player, baddie) {
+function violentDeath (player, sprite) {
 
   // Removes the star from the screen
   player.kill();
@@ -48,7 +48,7 @@ BasicGame.FirstLvl.prototype = {
     this.lastBulletShotAt = this.game.time.now;
 
     // Get a dead bullet from the pool
-    var bullet = this.bulletPool.getFirstDead();
+    bullet = this.bulletPool.getFirstDead();
 
     // If there aren't any bullets available then don't shoot
     if (bullet === null || bullet === undefined) return;
@@ -70,6 +70,7 @@ BasicGame.FirstLvl.prototype = {
     // Shoot it
     bullet.body.velocity.x = this.BULLET_SPEED;
     bullet.body.velocity.y = 0;
+
   },
 
   create: function () {
@@ -156,18 +157,21 @@ BasicGame.FirstLvl.prototype = {
     this.bulletPool = this.game.add.group();
     for(var i = 0; i < this.NUMBER_OF_BULLETS; i++) {
       // Create each bullet and add it to the group.
-      var bullet = this.game.add.sprite(0, 0, 'bullet');
+      bullet = this.game.add.sprite(0, 0, 'bullet');
       this.bulletPool.add(bullet);
 
       // Set its pivot point to the center of the bullet
       bullet.anchor.setTo(0.5, 0.5);
 
-      // Enable physics on the bullet
-      this.game.physics.enable(bullet, Phaser.Physics.ARCADE);
-
       // Set its initial state to "dead".
       bullet.kill();
     }
+
+          // Enable physics on the bullet
+          this.game.physics.arcade.enable(this.bulletPool);
+          this.bulletPool.enableBody = true;
+          this.game.physics.arcade.collide(player, this.bulletPool);
+        this.bulletPool.physicsBodyType = Phaser.Physics.ARCADE;
 
 
   },
@@ -215,7 +219,10 @@ BasicGame.FirstLvl.prototype = {
     animateBaddie(player, baddie);
 
     if (localStorage.getItem('done') == 'firstLvl'){
+      // Collide player and bullets
       this.shootBullet();
+          // Make it lethal
+          this.game.physics.arcade.overlap(player, bullet, violentDeath, null, this);
     }
 
 
