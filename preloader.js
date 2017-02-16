@@ -26,7 +26,7 @@ BasicGame.Preloader.prototype = {
     //  Here we load the rest of the assets our game needs.
     this.load.image('titlepage', 'assets/titlepage.png');
     this.load.image('sky', 'assets/sky.png');
-    this.load.image('unicorn', '/assets/rainbow.jpg');
+    this.load.image('unicorn', 'assets/rainbow.jpg');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('empty', 'assets/empty.png');
     this.load.image('gender', 'assets/gender.png');
@@ -35,9 +35,9 @@ BasicGame.Preloader.prototype = {
     this.load.image('university', 'assets/university.png');
     this.load.image('factory', 'assets/factory.png');
     this.load.image('firstLvlDone', 'assets/firstLvlDone.png');
-    this.load.image('bullet', '/assets/bullet.png');
-    this.load.image('question', '/assets/question.png');
-    this.load.image('simplon', '/assets/simplon.png');
+    this.load.image('bullet', 'assets/bullet.png');
+    this.load.image('question', 'assets/question.png');
+    this.load.image('simplon', 'assets/simplon.png');
     this.load.spritesheet('dude', 'assets/dude.png', 32, 48);
 		this.load.spritesheet('baddie', 'assets/baddie.png', 32, 32);
     this.load.spritesheet('kaboom', 'assets/explode.png', 128, 128);
